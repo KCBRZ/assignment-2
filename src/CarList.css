@@ -1,0 +1,22 @@
+/* CarList.css */
+
+.car-list {
+    padding: 0;
+  }
+  
+  .car-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .car-item .car-details {
+    flex-grow: 1;
+  }
+  
+  .car-item .car-actions {
+    margin-left: 10px;
+  }
+  

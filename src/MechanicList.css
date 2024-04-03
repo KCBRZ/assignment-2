@@ -1,0 +1,22 @@
+/* MechanicList.css */
+
+.mechanic-list {
+    padding: 0;
+  }
+  
+  .mechanic-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mechanic-item .mechanic-details {
+    flex-grow: 1;
+  }
+  
+  .mechanic-item .mechanic-actions {
+    margin-left: 10px;
+  }
+  
