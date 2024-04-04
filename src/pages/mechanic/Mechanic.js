@@ -1,47 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Mechanic = () => {
+  const navigate = useNavigate();
   // Initialize state variables to hold mechanic details
   const [mechanics, setMechanics] = useState([]);
 
   // Function to delete a mechanic
-  const deleteMechanic = (mechanicId) => {
-    // Update state
-    setMechanics(mechanics.filter((mechanic) => mechanic.id !== mechanicId));
-    // Update local storage
-    localStorage.setItem(
-      "mechanics",
-      JSON.stringify(mechanics.filter((mechanic) => mechanic.id !== mechanicId))
+  const deleteMechanic = async (id) => {
+    var result = window.confirm(
+      "Are you sure want to delete the selected mechanic?"
     );
+    if (result) {
+      await axios.delete(`http://localhost:8000/mechanic/${id}`);
+      window.alert("Mechanic successfully deleted");
+    }
   };
 
   // Function to edit a mechanic
-  const editMechanic = (mechanicId, updatedMechanic) => {
-    // Update state
-    setMechanics(
-      mechanics.map((mechanic) =>
-        mechanic.id === mechanicId ? updatedMechanic : mechanic
-      )
-    );
-    // Update local storage
-    localStorage.setItem(
-      "mechanics",
-      JSON.stringify(
-        mechanics.map((mechanic) =>
-          mechanic.id === mechanicId ? updatedMechanic : mechanic
-        )
-      )
-    );
+  const editMechanic = (id) => navigate(`/mechanic/${id}`);
+
+  // load mechanic details
+  const mechanicDetails = async () => {
+    const fetchMechanic = await axios.get(`http://localhost:8000/mechanic`);
+    setMechanics(fetchMechanic.data);
   };
 
   // Load data from local storage when component mounts
   useEffect(() => {
-    const storedMechanics = localStorage.getItem("mechanics");
-    if (storedMechanics) {
-      setMechanics(JSON.parse(storedMechanics));
-    }
-  }, []);
+    mechanicDetails();
+  }, [mechanicDetails]);
 
   return (
     <>
@@ -73,12 +62,7 @@ const Mechanic = () => {
                     </button>
                     <button
                       className="btn btn-sm btn-primary"
-                      onClick={() =>
-                        editMechanic(mechanic.id, {
-                          ...mechanic,
-                          fullName: "Updated Name",
-                        })
-                      }
+                      onClick={() => editMechanic(mechanic.id)}
                     >
                       Edit
                     </button>
@@ -89,6 +73,7 @@ const Mechanic = () => {
                 <strong>Expert Domain:</strong> {mechanic.expertDomain}
                 <br />
                 <strong>Experience:</strong> {mechanic.experience} years
+                <br />
                 <br />
               </div>
               <div className="mechanic-actions"></div>

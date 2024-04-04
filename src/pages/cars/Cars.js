@@ -1,39 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Cars = () => {
+  const navigate = useNavigate();
+
   // Initialize state variables to hold car details
   const [cars, setCars] = useState([]);
 
   // Function to delete a car
-  const deleteCar = (carId) => {
-    // Update state
-    setCars(cars.filter((car) => car.id !== carId));
-    // Update local storage
-    localStorage.setItem(
-      "cars",
-      JSON.stringify(cars.filter((car) => car.id !== carId))
+  const deleteCar = async (id) => {
+    var result = window.confirm(
+      "Are you sure want to delete the selected car?"
     );
+    if (result) {
+      await axios.delete(`http://localhost:8000/cars/${id}`);
+      window.alert("car successfully deleted");
+    }
   };
 
   // Function to edit a car
-  const editCar = (carId, updatedCar) => {
-    // Update state
-    setCars(cars.map((car) => (car.id === carId ? updatedCar : car)));
-    // Update local storage
-    localStorage.setItem(
-      "cars",
-      JSON.stringify(cars.map((car) => (car.id === carId ? updatedCar : car)))
-    );
+  const editCar = (id) => navigate(`/cars/${id}`);
+
+  // load car details
+  const carDetails = async () => {
+    const fetchCars = await axios.get(`http://localhost:8000/cars`);
+    setCars(fetchCars.data);
   };
 
   // Load data from local storage when component mounts
   useEffect(() => {
-    const storedCars = localStorage.getItem("cars");
-    if (storedCars) {
-      setCars(JSON.parse(storedCars));
-    }
-  }, []);
+    carDetails();
+  }, [carDetails]);
 
   return (
     <>
@@ -60,16 +58,12 @@ const Cars = () => {
               </button>
               <button
                 className="btn btn-sm btn-primary"
-                onClick={() =>
-                  editCar(car.id, { ...car, make: "Updated Make" })
-                }
+                onClick={() => editCar(car.id)}
               >
                 Edit
               </button>
             </li>
           ))
-
-          
         ) : (
           <p>Sorry, there are no any car</p>
         )}

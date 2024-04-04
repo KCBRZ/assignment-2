@@ -1,0 +1,42 @@
+{
+  "cars": [
+    {
+      "id": "1686",
+      "make": "Dolor aliquam amet ",
+      "model": "Consequatur dolore i",
+      "colour": "In praesentium aliqu",
+      "year": "2015",
+      "platenumber": "945",
+      "fault": "Necessitatibus dolor"
+    },
+    {
+      "id": "485",
+      "make": "Dolore minus adipisi",
+      "model": "Fugit quas voluptat",
+      "colour": "Quis numquam ut repr",
+      "year": "1993",
+      "platenumber": "258",
+      "fault": "Aut ab assumenda dol"
+    }
+  ],
+  "mechanic": [
+    {
+      "experience": 32,
+      "expertDomain": "Labore ad numquam do",
+      "fullName": "Ahmed Leblanc",
+      "id": "1124"
+    },
+    {
+      "id": "9944",
+      "fullName": "dsdsd",
+      "expertDomain": "Voluptates aut sapie",
+      "experience": "22"
+    },
+    {
+      "id": "69",
+      "fullName": "Wendy Petty",
+      "expertDomain": "Dolores commodo temp",
+      "experience": "70"
+    }
+  ]
+}

@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 
-const MechanicCreate = () => {
+const MechanicEdit = () => {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const id = String(params.id);
 
   const [mechanic, setMechanic] = useState({
     fullName: "",
@@ -11,29 +14,35 @@ const MechanicCreate = () => {
     experience: "",
   });
 
+  const fetchMechanicById = async () => {
+    const mechanicData = await axios.get(
+      `http://localhost:8000/mechanic/${id}`
+    );
+    setMechanic(mechanicData.data);
+  };
+
+  useEffect(() => {
+    fetchMechanicById();
+  }, []);
+
   // Function to handle changes in form inputs
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
     setMechanic((prevState) => ({
       ...prevState,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
-  // Function to add a new mechanic
-  const addMechanic = async () => {
-    // Generate a unique ID for the new mechanic
-    const id = String(Math.floor(Math.random() * 10000));
-    const newMechanic = { id, ...mechanic };
-
-    await axios.post(`http://localhost:8000/mechanic`, newMechanic);
+  // Function to add a new car
+  const updateMechanic = async () => {
+    await axios.put(`http://localhost:8000/mechanic/${id}`, mechanic);
     navigate("/mechanic");
   };
 
   return (
     <>
       <div className="mechanic-list-container">
-        <h2>Add New Mechanic</h2>
+        <h2>Update Mechanic</h2>
         <div className="d-flex justify-content-between">
           <NavLink to={"/mechanic"} className="btn btn-sm btn-primary">
             Mechanic List
@@ -78,9 +87,9 @@ const MechanicCreate = () => {
           <button
             type="button"
             className="btn btn-primary btn-md"
-            onClick={addMechanic}
+            onClick={updateMechanic}
           >
-            Add Mechanic
+            Update Mechanic
           </button>
         </div>
         <br></br>
@@ -89,4 +98,4 @@ const MechanicCreate = () => {
   );
 };
 
-export default MechanicCreate;
+export default MechanicEdit;

@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../CarList.css"; // Import CSS file for component styling
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CarCreate = () => {
+const CarEdit = () => {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const id = String(params.id);
+
+  // Initialize state variables to hold car details
   const [car, setCar] = useState({
     make: "",
     model: "",
@@ -14,29 +19,32 @@ const CarCreate = () => {
     fault: "",
   });
 
+  const fetchCarById = async () => {
+    const carData = await axios.get(`http://localhost:8000/cars/${id}`);
+    setCar(carData.data);
+  };
+
+  useEffect(() => {
+    fetchCarById();
+  }, []);
+
   // Function to handle changes in form inputs
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
     setCar((prevState) => ({
       ...prevState,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
   // Function to add a new car
-  const addCar = async () => {
-    // Generate a unique ID for the new car
-    const id = String(Math.floor(Math.random() * 10000));
-    const newCar = { id, ...car };
-
-    await axios.post(`http://localhost:8000/cars`, newCar);
+  const updateCar = async () => {
+    await axios.put(`http://localhost:8000/cars/${id}`, car);
     navigate("/cars");
   };
 
   return (
     <div className="car-list-container">
-      <h2>Add New Car</h2>
+      <h2>Update Car</h2>
       <div className="d-flex justify-content-between">
         <NavLink to={"/cars"} className="btn btn-sm btn-primary">
           Car List
@@ -89,11 +97,11 @@ const CarCreate = () => {
           value={car.fault}
           onChange={handleInputChange}
         />
-        <button onClick={addCar}>Add Car</button>
+        <button onClick={updateCar}>Update Car</button>
       </div>
       <br></br>
     </div>
   );
 };
 
-export default CarCreate;
+export default CarEdit;
